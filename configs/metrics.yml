@@ -2,6 +2,24 @@
 # The *first* metric will be used to generate plots.
 # Specify the chance level of the metric as associated value, if not specified, assumed to be 0.5
 
+dreamer_valence:
+  - bac: 0.2
+
+dreamer_arousal:
+  - bac: 0.2
+
+dreamer_dominance:
+  - bac: 0.2
+
+seed_1:
+  - Accuracy: 0.33
+
+seed_2:
+  - Accuracy: 0.33
+
+seed_3:
+  - Accuracy: 0.33
+
 mmidb:
   - bac
 

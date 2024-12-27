@@ -12,7 +12,7 @@ from dn3.configuratron import ExperimentConfig
 from dn3.data.dataset import Thinker
 from dn3.trainable.processes import StandardClassification
 
-from dn3_ext import BENDRClassification, LinearHeadBENDR
+from dn3_ext import BENDRClassification, LinearHeadBENDR, LinearHeadBENDR_ChanRed
 
 # Since we are doing a lot of loading, this is nice to suppress some tedious information
 import mne
@@ -41,14 +41,14 @@ if __name__ == '__main__':
 
     for ds_name, ds in tqdm.tqdm(experiment.datasets.items(), total=len(experiment.datasets.items()), desc='Datasets'):
         added_metrics, retain_best, _ = utils.get_ds_added_metrics(ds_name, args.metrics_config)
-        for fold, (training, validation, test) in enumerate(tqdm.tqdm(utils.get_lmoso_iterator(ds_name, ds))):
+        for fold, (training, validation, test) in enumerate(tqdm.tqdm(utils.get_lmoso_iterator_ChanRed(ds_name, ds))):
 
             tqdm.tqdm.write(torch.cuda.memory_summary())
 
             if args.model == utils.MODEL_CHOICES[0]:
                 model = BENDRClassification.from_dataset(training, multi_gpu=args.multi_gpu)
             else:
-                model = LinearHeadBENDR.from_dataset(training)
+                model = LinearHeadBENDR_ChanRed.from_dataset(training)
 
             if not args.random_init:
                 model.load_pretrained_modules(experiment.encoder_weights, experiment.context_weights,
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
             # Fit everything
             process.fit(training_dataset=training, validation_dataset=validation, warmup_frac=0.1,
-                        retain_best=retain_best, pin_memory=False, **ds.train_params)
+                        retain_best=retain_best, pin_memory=False, **ds.train_params._d)
 
             if args.results_filename:
                 if isinstance(test, Thinker):

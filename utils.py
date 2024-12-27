@@ -2,7 +2,7 @@ import torch
 import yaml
 
 from dn3.metrics.base import balanced_accuracy, auroc
-from dn3.transforms.instance import To1020
+from dn3.transforms.instance import To1020, ToSEED
 
 from dn3_ext import LoaderERPBCI, LinearHeadBENDR, BENDRClassification
 
@@ -60,6 +60,22 @@ def get_ds(name, ds):
 
 def get_lmoso_iterator(name, ds):
     dataset = get_ds(name, ds)
+    specific_test = ds.test_subjects if hasattr(ds, 'test_subjects') else None
+    iterator = dataset.lmso(ds.folds, test_splits=specific_test) \
+        if hasattr(ds, 'folds') else dataset.loso(test_person_id=specific_test)
+    return iterator
+
+
+def get_ds_ChanRed(name, ds):
+    if name in CUSTOM_LOADERS:
+        ds.add_custom_raw_loader(CUSTOM_LOADERS[name]())
+    dataset = ds.auto_construct_dataset()
+    dataset.add_transform(ToSEED())
+    return dataset
+
+
+def get_lmoso_iterator_ChanRed(name, ds):
+    dataset = get_ds_ChanRed(name, ds)
     specific_test = ds.test_subjects if hasattr(ds, 'test_subjects') else None
     iterator = dataset.lmso(ds.folds, test_splits=specific_test) \
         if hasattr(ds, 'folds') else dataset.loso(test_person_id=specific_test)

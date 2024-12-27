@@ -1,14 +1,18 @@
 Configuratron:
   use_only:
-    - tueg_v1_1
-    - tueg_v1_2
-    - bci_iv_2a
+    - dreamer
+    - seed_1
+    - seed_2
+    - seed_3
+    # - tueg_v1_1
+    # - tueg_v1_2
+    # - bci_iv_2a
   samples: 15360 # = 60 seconds
   sfreq: 256
   deep1010:
     return_mask: True
 
-validation_dataset: bci_iv_2a
+validation_dataset: dreamer
 
 augmentation_params:
   upsample_crop: 32
@@ -41,6 +45,50 @@ bending_college_args:
   enc_feat_l2: 1.0
 
 datasets:
+  seed_1:
+    name: "SEED Session 1"
+    toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/SEED/files/Session1
+    stride: 15360
+    data_max: 213.3051
+    data_min: -99.5426
+    extensions:
+      - .fif
+    picks:
+      - eeg
+
+  seed_2:
+    name: "SEED Session 2"
+    toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/SEED/files/Session2
+    stride: 15360
+    data_max: 213.3051
+    data_min: -99.5426
+    extensions:
+      - .fif
+    picks:
+      - eeg
+
+  seed_3:
+    name: "SEED Session 3"
+    toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/SEED/files/Session3
+    stride: 15360
+    data_max: 213.3051
+    data_min: -99.5426
+    extensions:
+      - .fif
+    picks:
+      - eeg
+
+  dreamer:
+    name: "DREAMER"
+    toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/DREAMER/files_valence
+    stride: 15360
+    data_max: 623.7988
+    data_min: -288.8403
+    extensions:
+      - .fif
+    picks:
+      - eeg
+
   tueg_v1_1:
     data_max: 3276.7
     data_min: -1583.9258304722666

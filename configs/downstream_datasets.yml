@@ -1,6 +1,6 @@
 mmidb:
   name: "Physionet MMIDB"
-  toplevel: /<path/to>/physionet.org/files/eegmmidb/
+  toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/MMIDB/
   tmin: 0
   tlen: 6
   data_max: 0.001
@@ -22,6 +22,137 @@ mmidb:
   lr: 0.00001
   folds: 5
 
+seed:
+  name: "SEED Sessions"
+  toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/SEED/files/Sessions
+  tmin: 0
+  tlen: 1
+  data_max: 213.3051
+  data_min: -99.5426
+  extensions:
+    - .fif
+  events:
+    - S0
+    - S1
+    - S2
+  train_params:
+    epochs: 50
+    batch_size: 64
+  lr: 0.0001
+
+seed_1:
+  name: "SEED Session 1"
+  toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/SEED/files/Session1
+  tmin: 0
+  tlen: 1
+  data_max: 213.3051
+  data_min: -99.5426
+  extensions:
+    - .fif
+  events:
+    - S0
+    - S1
+    - S2
+  train_params:
+    epochs: 50
+    batch_size: 64
+  lr: 0.0001
+
+seed_2:
+  name: "SEED Session 2"
+  toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/SEED/files/Session2
+  tmin: 0
+  tlen: 1
+  data_max: 213.3051
+  data_min: -99.5426
+  extensions:
+    - .fif
+  events:
+    - S0
+    - S1
+    - S2
+  train_params:
+    epochs: 50
+    batch_size: 64
+  lr: 0.0001
+
+seed_3:
+  name: "SEED Session 3"
+  toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/SEED/files/Session3
+  tmin: 0
+  tlen: 1
+  data_max: 213.3051
+  data_min: -99.5426
+  extensions:
+    - .fif
+  events:
+    - S0
+    - S1
+    - S2
+  train_params:
+    epochs: 50
+    batch_size: 64
+  lr: 0.0001
+
+dreamer_valence:
+  name: "DREAMER valence"
+  toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/DREAMER/files_valence
+  tmin: 0
+  tlen: 1
+  data_max: 623.7988
+  data_min: -288.8403
+  extensions:
+    - .fif
+  events:
+    - V1
+    - V2
+    - V3
+    - V4
+    - V5
+  train_params:
+    epochs: 50
+    batch_size: 64
+  lr: 0.0001
+
+dreamer_arousal:
+  name: "DREAMER arousal"
+  toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/DREAMER/files_arousal
+  tmin: 0
+  tlen: 1
+  data_max: 623.7988
+  data_min: -288.8403
+  extensions:
+    - .fif
+  events:
+    - A1
+    - A2
+    - A3
+    - A4
+    - A5
+  train_params:
+    epochs: 50
+    batch_size: 64
+  lr: 0.0001
+
+dreamer_dominance:
+  name: "DREAMER dominance"
+  toplevel: /users/eleves-a/2021/tom-eliot.jullien/julien/data/DREAMER/files_dominance
+  tmin: 0
+  tlen: 1
+  data_max: 623.7988
+  data_min: -288.8403
+  extensions:
+    - .fif
+  events:
+    - D1
+    - D2
+    - D3
+    - D4
+    - D5
+  train_params:
+    epochs: 50
+    batch_size: 64
+  lr: 0.0001
 
 bci_iv_2a:
   name: "BCI Competition IV 2a"

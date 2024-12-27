@@ -75,6 +75,71 @@ class LinearHeadBENDR(Classifier):
         self.enc_augment.init_from_contextualizer(contextualizer_file)
 
 
+class LinearHeadBENDR_ChanRed(Classifier):
+
+    @property
+    def num_features_for_classification(self):
+        return self.encoder_h * self.pool_length
+
+    def features_forward(self, x):
+        scale_ch = x[:, -1, :].unsqueeze(1)
+        x = torch.unsqueeze(x, 1)
+        x = self.chan_red(x)
+        x = torch.squeeze(x, 2)
+        x = torch.concat((x, scale_ch), 1)
+        x = self.encoder(x)
+        x = self.enc_augment(x)
+        x = self.summarizer(x)
+        return self.extended_classifier(x)
+
+    def __init__(self, targets, samples, channels, innerChannels=20, encoder_h=512, projection_head=False,
+                 enc_do=0.1, feat_do=0.4, pool_length=4, mask_p_t=0.01, mask_p_c=0.005, mask_t_span=0.05,
+                 mask_c_span=0.1, classifier_layers=1):
+        if classifier_layers < 1:
+            self.pool_length = pool_length
+            self.encoder_h = 3 * encoder_h
+        else:
+            self.pool_length = pool_length // classifier_layers
+            self.encoder_h = encoder_h
+        super().__init__(targets, samples, innerChannels)
+
+        self.chan_red = nn.Conv2d(1, innerChannels-1, (channels, 1))
+
+        self.encoder = ConvEncoderBENDR(innerChannels, encoder_h=encoder_h, projection_head=projection_head, dropout=enc_do)
+        encoded_samples = self.encoder.downsampling_factor(samples)
+
+        mask_t_span = mask_t_span if mask_t_span > 1 else int(mask_t_span * encoded_samples)
+        # Important for short things like P300
+        mask_t_span = 0 if encoded_samples < 2 else mask_t_span
+        mask_c_span = mask_c_span if mask_c_span > 1 else int(mask_c_span * encoder_h)
+
+        self.enc_augment = EncodingAugment(encoder_h, mask_p_t, mask_p_c, mask_c_span=mask_c_span,
+                                           mask_t_span=mask_t_span)
+        tqdm.tqdm.write(self.encoder.description(None, samples) + " | {} pooled".format(pool_length))
+        self.summarizer = nn.AdaptiveAvgPool1d(pool_length)
+
+        classifier_layers = [self.encoder_h * self.pool_length for i in range(classifier_layers)] if \
+            not isinstance(classifier_layers, (tuple, list)) else classifier_layers
+        classifier_layers.insert(0, 3 * encoder_h * pool_length)
+        self.extended_classifier = nn.Sequential(Flatten())
+        for i in range(1, len(classifier_layers)):
+            self.extended_classifier.add_module("ext-classifier-{}".format(i), nn.Sequential(
+                nn.Linear(classifier_layers[i - 1], classifier_layers[i]),
+                nn.Dropout(feat_do),
+                nn.ReLU(),
+                nn.BatchNorm1d(classifier_layers[i]),
+            ))
+
+    def load_encoder(self, encoder_file, freeze=False, strict=True):
+        self.encoder.load(encoder_file, strict=strict)
+        self.encoder.freeze_features(not freeze)
+        print("Loaded {}".format(encoder_file))
+
+    def load_pretrained_modules(self, encoder_file, contextualizer_file, strict=False, freeze_encoder=True):
+        self.load_encoder(encoder_file, strict=strict, freeze=freeze_encoder)
+        self.enc_augment.init_from_contextualizer(contextualizer_file)
+
+
 class BENDRClassification(Classifier):
 
     @property

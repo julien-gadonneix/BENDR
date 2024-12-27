@@ -1,17 +1,24 @@
 Configuratron:
   use_only:
-    - mmidb
-    - bci_iv_2a
-    - ern
-    - erpbci
-    - sleep-edf
+    # - mmidb
+    - dreamer_valence
+    - dreamer_arousal
+    - dreamer_dominance
+    # - seed_1
+    # - seed_2
+    # - seed_3
+    # - seed
+    # - bci_iv_2a
+    # - ern
+    # - erpbci
+    # - sleep-edf
   preload: True
   sfreq: 256
   deep1010:
     return_mask: False
 
-encoder_weights: <saved encoder weights>
-context_weights: <saved transformer weights>
+encoder_weights: /users/eleves-a/2021/tom-eliot.jullien/julien/BENDR_EmotionRecognition/models/encoder.pt
+context_weights: /users/eleves-a/2021/tom-eliot.jullien/julien/BENDR_EmotionRecognition/models/contextualizer.pt
 
 datasets: !include configs/downstream_datasets.yml
 

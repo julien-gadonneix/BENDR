@@ -62,7 +62,7 @@ if __name__ == '__main__':
     process = BendingCollegeWav2Vec(encoder, contextualizer, **experiment.bending_college_args)
 
     # Slower learning rate for the encoder
-    process.set_optimizer(torch.optim.Adam(process.parameters(), **experiment.optimizer_params))
+    process.set_optimizer(torch.optim.Adam(process.parameters(), **experiment.optimizer_params._d))
     process.add_batch_transform(RandomTemporalCrop(max_crop_frac=experiment.augmentation_params.batch_crop_frac))
 
     tqdm.tqdm.write(process.description(experiment.global_samples))
@@ -81,7 +81,7 @@ if __name__ == '__main__':
             contextualizer.save('checkpoints/contextualizer.pt')
 
     # Slower learning rate for the encoder
-    process.set_optimizer(torch.optim.Adam(process.parameters(), **experiment.optimizer_params))
+    process.set_optimizer(torch.optim.Adam(process.parameters(), **experiment.optimizer_params._d))
     process.add_batch_transform(RandomTemporalCrop(max_crop_frac=experiment.augmentation_params.batch_crop_frac))
 
     tqdm.tqdm.write(process.description(experiment.global_samples))
@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     process.fit(training, epoch_callback=epoch_checkpoint, num_workers=args.num_workers,
                 validation_dataset=validation, resume_epoch=args.resume, log_callback=simple_checkpoint,
-                **experiment.training_params)
+                **experiment.training_params._d)
 
     print(process.evaluate(validation))
 
