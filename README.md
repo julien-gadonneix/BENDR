@@ -23,7 +23,7 @@ Once you have a pre-trained model:
     2) Edit paths to local copies of your datasets in configs/downstream_datasets.yml
     3) Run downstream.sh
 
-##
+## Improvements
 
 [logo]: BENDR-jacking-on.gif "Bender Jacking-on"
 
